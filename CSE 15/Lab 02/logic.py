@@ -3,7 +3,6 @@
 # Computer Science and Engineering
 # University of California Merced
 
-
 def generate(vars):
     values = [0, 1]
     command = ""
@@ -30,17 +29,14 @@ def generate(vars):
     return rows
 
 
-# Logical AND
 def land(a, b):
     return a and b
 
 
-# Logical OR
 def lor(a, b):
     return a or b
 
 
-# Logical NOT
 def lnot(a):
     return not a
 
@@ -55,45 +51,45 @@ def liff(a, b):
 
 def isPrimitive(formula):
     for i in formula:
-        if isConnective(i) or i == "(" or i == ")":
+        if isConnective(i) or i == '(' or i == ')':
             return False
     return True
 
 
 def reformat(formula):
-    temp = formula.split(" ")
+    temp = formula.split(' ')
     c = []
     for i in temp:
-        if i != "":
+        if i != '':
             c.append(i)
-    r = ""
+    r = ''
     for i in c:
-        if i == "and" or i == "or" or i == "->" or i == "<->":
-            i = " " + i + " "
+        if i == 'and' or i == 'or' or i == '->' or i == '<->':
+            i = ' ' + i + ' '
         r = r + i
 
-    s = ""
+    s = ''
     for i in range(len(r)):
 
         s = s + r[i]
 
-        if r[i] == "-" and r[i + 1] != ">":
-            s = s + " "
+        if r[i] == '-' and r[i+1] != '>':
+            s = s + ' '
 
-        if (i < len(r) - 1) and (r[i + 1] == ")"):
-            s = s + " "
+        if (i < len(r) - 1) and (r[i + 1] == ')'):
+            s = s + ' '
 
-        if r[i] == "(" and r[i + 1] != " ":
-            s = s + " "
+        if r[i] == '(' and r[i+1] != ' ':
+            s = s + ' '
     return s
 
 
 def matching(items):
     pc = 0
     for i in range(len(items)):
-        if items[i] == "(":
+        if items[i] == '(':
             pc = pc + 1
-        elif items[i] == ")":
+        elif items[i] == ')':
             pc = pc - 1
 
         if pc == 0 and i < (len(items) - 1):
@@ -103,13 +99,13 @@ def matching(items):
 
 def flatten(items):
     if len(items) > 0:
-        while items[0] == "(" and items[-1] == ")" and matching(items):
+        while items[0] == '(' and items[-1] == ')' and matching(items):
             items = items[1:-1]
     return items
 
 
 def isConnective(s):
-    return s == "and" or s == "or" or s == "->" or s == "<->" or s == "-"
+    return s == 'and' or s == 'or' or s == '->' or s == '<->' or s == '-'
 
 
 def mainConnective(items):
@@ -119,21 +115,21 @@ def mainConnective(items):
     pc = 0
 
     for i in range(len(items)):
-        if items[i] == "(":
+        if items[i] == '(':
             pc = pc + 1
-        elif items[i] == ")":
+        elif items[i] == ')':
             pc = pc - 1
 
         if not isConnective(items[i]):
             lhs.append(items[i])
         else:
             if pc == 0:
-                if items[i] == "-":
-                    if items[i + 1] == "(":
-                        test = items[i + 1 :]
+                if items[i] == '-':
+                    if items[i+1] == '(':
+                        test = items[i+1:]
                         if matching(test):
                             stack.append(items[i])
-                            rhs = items[i + 1 :]
+                            rhs = items[i+1:]
                             if isPrimitive(lhs):
                                 stack.append(lhs)
                             else:
@@ -147,9 +143,10 @@ def mainConnective(items):
                         else:
                             lhs.append(items[i])
 
-                    elif i + 1 == len(items) - 1:
+
+                    elif i+1 == len(items)-1:
                         stack.append(items[i])
-                        rhs = items[i + 1 :]
+                        rhs = items[i+1:]
                         if isPrimitive(lhs):
                             stack.append(lhs)
                         else:
@@ -166,7 +163,7 @@ def mainConnective(items):
                 else:
 
                     stack.append(items[i])
-                    rhs = items[i + 1 :]
+                    rhs = items[i+1:]
 
                     if isPrimitive(lhs):
                         stack.append(lhs)
@@ -188,12 +185,12 @@ def mainConnective(items):
 
 def process(formula):
     formula = reformat(formula)
-    items = formula.split(" ")
+    items = formula.split(' ')
     return mainConnective(items)
 
 
 def substitute(stack, bl):
-    if stack[0] == "-":
+    if stack[0] == '-':
         if isPrimitive(stack[2]):
             return [stack[0], stack[1], bl[stack[2][0]]]
         else:
@@ -211,20 +208,19 @@ def substitute(stack, bl):
 
 def evaluateNow(formula):
 
-    if formula[0] == "-":
+    if formula[0] == '-':
         return lnot(formula[2])
-    elif formula[0] == "and":
+    elif formula[0] == 'and':
         return land(formula[1], formula[2])
-    elif formula[0] == "or":
+    elif formula[0] == 'or':
         return lor(formula[1], formula[2])
-    elif formula[0] == "->":
+    elif formula[0] == '->':
         return lif(formula[1], formula[2])
-    elif formula[0] == "<->":
+    elif formula[0] == '<->':
         return liff(formula[1], formula[2])
 
-
 def evaluate(formula):
-    if formula[0] == "-":
+    if formula[0] == '-':
         if not isinstance(formula[2], list):
             return evaluateNow([formula[0], None, formula[2]])
         else:
@@ -238,7 +234,6 @@ def evaluate(formula):
             return evaluateNow([formula[0], formula[1], evaluate(formula[2])])
         else:
             return evaluateNow([formula[0], evaluate(formula[1]), evaluate(formula[2])])
-
 
 class TruthTable:
     def __init__(self, vars, props):
@@ -280,13 +275,13 @@ class TruthTable:
         for i in range(len(header)):
             item = header[i]
             pad = widths[i] - len(item)
-            item = item + (" " * pad)
-            print(item, end="   ")
+            item = item + (' ' * pad)
+            print(item, end='   ')
         print()
         total = 1
         for i in widths:
             total = total + i
-        print("-" * total)
+        print('-' * total)
         for row in self.table:
             varlist = []
             for i in row[0]:
@@ -295,39 +290,31 @@ class TruthTable:
             for i in range(len(line)):
                 item = str(line[i])
                 pad = widths[i] - len(item)
-                item = item + (" " * pad)
-                print(item, end="")
+                item = item + (' ' * pad)
+                print(item, end='')
             print()
 
     def latex(self):
-        align = ((len(self.vars) + len(self.props) - 1) * "|c") + "|c|"
+        align = ((len(self.vars) + len(self.props) -1) * '|c') + '|c|';
         header = ""
         latexphrases = []
         for i in self.props:
-            latexphrase = (
-                i.replace(" and ", " \land ")
-                .replace(" or ", " \lor ")
-                .replace(" -> ", " \\to ")
-                .replace("-", " \lnot ")
-                .replace(" <-> ", " \\leftrightarrow ")
-            )
+            latexphrase = i.replace(' and ', ' \land ').replace(' or ', ' \lor ').replace(' -> ', ' \\to ').replace('-', ' \lnot ').replace(' <-> ', ' \\leftrightarrow ')
             latexphrases.append(latexphrase)
         for i in self.vars + latexphrases:
-            header = header + "$" + i + "$ & "
+            header = header +"$" +i + "$ & "
         header = header[:-2]
         rows = ""
         for i in self.table:
             pv = i[0]
             res = i[1]
             temp = ""
-            for j in pv + res:
-                temp = temp + str(j) + " & "
+            for j in pv+res:
+                temp = temp + str(j) + ' & '
             temp = temp[:-2] + "\\\\\n"
             rows = rows + temp
 
         rows = rows[:-1]
-        command = (
-            "\\begin{tabular}{%s}\n\\hline\n%s\\\\\n\\hline\n%s\n\\hline\n\\end{tabular}"
-            % (align, header, rows)
-        )
+        command = "\\begin{tabular}{%s}\n\\hline\n%s\\\\\n\\hline\n%s\n\\hline\n\\end{tabular}" % (align, header, rows)
         print(command)
+
