@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# This code Grades Students for their work, 
+# by executing the a.exe with given input and provided output
+# if the result is same then pass, else fail
+
+# checks whether the file named tempresult1 exists in the current directory
+if [ -f result ];
+  then
+  rm result
+  echo "deleted result file"
+else
+  echo "result file does not exist"
+fi
+
+
+for i in `seq 1 5`; do
+    
+    if [ -f tempresult1 ];
+    then
+      rm tempresult1
+    fi
+    # The command ./a.exe < ./testfiles/t$i > tempresult1 attempts to execute the program a.exe with input from the file ./testfiles/t$i and redirects the output to a file named tempresult1.
+    ./a.exe < ./testfiles/t$i > tempresult1
+    # The command diff tempresult1 ./testfiles/o$i > tempcnt compares the contents of the files tempresult1 and ./testfiles/o$i and writes the differences (if any) to a file named tempcnt
+    diff tempresult1 ./testfiles/o$i > tempcnt
+    # checks whether the file named tempcnt exists and is not empty
+    if [ -s tempcnt ] ; 
+    then
+      echo "Incorrect for $i th example."
+    else
+      echo "  Correct for $i th example.";
+    fi;
+
+    echo "==================" >> result
+    echo "test" $i:  >> result
+    echo "student:" >> result
+    ./a.exe < ./testfiles/t$i >> result
+    echo "" >>result
+    echo "grader:" >> result
+    cat ./testfiles/o$i >> result
+    echo "" >> result
+done
+
+rm tempresult1
+rm tempcnt
+rm a.exe
