@@ -12,11 +12,11 @@
 #!/bin/bash
 
 # # Find and delete all _MACOSX directories
-# find / -type d -name "_MACOSX" -exec rm -rf {} +
+find . -type d -name "_MACOSX" -exec rm -rf {} +
 
-# echo "_MACOSX directories have been deleted."
+echo "_MACOSX directories have been deleted."
 
 echo $(pwd)
-echo $(/)
+# echo $(/)
 
-echo $(find / -type d -name "_MACOSX") 
+echo $(find . -type d -name "_MACOSX"  -exec rm -rf {} +) 
